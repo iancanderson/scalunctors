@@ -1,6 +1,7 @@
 package com.thoughtbot
 
 import play.api.libs.json._
+import scala.io.Source
 
 case class Rhyme(word: String, score: Int)
 
@@ -32,6 +33,9 @@ object Puns {
   }
 
   def main(args: Array[String]) {
-    println(getBestRhymes("beer"))
+    val filename = "beatles_songs.txt"
+    for (line <- Source.fromFile(filename).getLines) {
+      println(line)
+    }
   }
 }
