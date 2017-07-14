@@ -4,6 +4,7 @@ import play.api.libs.json._
 import scala.io.Source
 
 case class Rhyme(word: String, score: Int)
+case class Pun(pun: String, sourcePhrase: String)
 
 object Puns {
   implicit val rhymeReads = Json.reads[Rhyme]
@@ -66,12 +67,16 @@ object Puns {
           val pun = line.
             replaceAllLiterally(matchWord.capitalize, seedWord.capitalize).
             replaceAllLiterally(matchWord, seedWord.toLowerCase)
-          f"$pun (pun of '$line')"
+          Pun(pun, line)
         }
-        case (line, _) => "Failure"
+        case (line, _) => Pun("failure", "This SHOULD NOT HAPPEN")
       }
     })
 
-    puns.foreach(println)
+    puns.foreach(pun => {
+      val punPhrase = pun.pun
+      val sourcePhrase = pun.sourcePhrase
+      println(f"$punPhrase (pun of '$sourcePhrase')")
+    })
   }
 }
