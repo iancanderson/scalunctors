@@ -33,7 +33,9 @@ object Puns {
   }
 
   def main(args: Array[String]) {
-    val bestRhymes = getBestRhymes("beer")
+    val seedWord = "beer"
+
+    val bestRhymes = getBestRhymes(seedWord)
     val rhymeWords = bestRhymes.map { _.word }
     val lines = Source.fromFile("beatles_songs.txt").getLines.toList
 
@@ -42,15 +44,20 @@ object Puns {
       (line, commonWords.headOption)
     }).filter(line => {
       line match {
-        case (line, None) => false
+        case (_, None) => false
         case _ => true
       }
     })
 
-    // println(
-    //   matchingLines.map(line => {
-    //     val matchWord = 
-    //   })
-    // )
+    val puns = linesWithOptionMatch.map(lineWithMatch => {
+      lineWithMatch match {
+        case (line, Some(matchWord)) => {
+          line.replaceAllLiterally(matchWord.capitalize, seedWord.capitalize)
+        }
+        case (line, _) => "Failure"
+      }
+    })
+
+    println(puns)
   }
 }
