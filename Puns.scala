@@ -33,9 +33,13 @@ object Puns {
   }
 
   def main(args: Array[String]) {
-    val filename = "beatles_songs.txt"
-    for (line <- Source.fromFile(filename).getLines) {
-      println(line)
-    }
+    val bestRhymes = getBestRhymes("beer")
+    val rhymeWords = bestRhymes.map { _.word }
+    val lines = Source.fromFile("beatles_songs.txt").getLines.toList
+    val matchingLines = lines.filter(line => {
+      line.split(" ").map(_.toLowerCase).intersect(rhymeWords).nonEmpty
+    })
+
+    println(matchingLines)
   }
 }
