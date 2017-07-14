@@ -32,14 +32,25 @@ object Puns {
     allRhymes.filter { _.score == maxScore }
   }
 
+  def loadPhrases(): List[String] = {
+    List(
+      "beatles-songs.txt",
+      "best-selling-books.txt",
+      "movie-quotes.txt",
+      "oscar-winning-movies.txt",
+      "wikipedia-idioms.txt"
+    ).flatMap {
+      Source.fromFile(_).getLines.toList
+    }
+  }
+
   def main(args: Array[String]) {
-    val seedWord = "beer"
+    val seedWord = "weather"
 
     val bestRhymes = getBestRhymes(seedWord)
     val rhymeWords = bestRhymes.map { _.word }
-    val lines = Source.fromFile("beatles_songs.txt").getLines.toList
 
-    val linesWithOptionMatch = lines.map(line => {
+    val linesWithOptionMatch = loadPhrases.map(line => {
       val commonWords = line.split(" ").map(_.toLowerCase).intersect(rhymeWords)
       (line, commonWords.headOption)
     }).filter(line => {
@@ -52,12 +63,15 @@ object Puns {
     val puns = linesWithOptionMatch.map(lineWithMatch => {
       lineWithMatch match {
         case (line, Some(matchWord)) => {
-          line.replaceAllLiterally(matchWord.capitalize, seedWord.capitalize)
+          val pun = line.
+            replaceAllLiterally(matchWord.capitalize, seedWord.capitalize).
+            replaceAllLiterally(matchWord, seedWord.toLowerCase)
+          f"$pun (pun of '$line')"
         }
         case (line, _) => "Failure"
       }
     })
 
-    println(puns)
+    puns.foreach(println)
   }
 }
