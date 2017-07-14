@@ -46,7 +46,7 @@ object Puns {
   }
 
   def main(args: Array[String]) {
-    val seedWord = "weather"
+    val seedWord = args.head
 
     val bestRhymes = getBestRhymes(seedWord)
     val rhymeWords = bestRhymes.map { _.word }
