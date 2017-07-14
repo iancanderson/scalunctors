@@ -10,19 +10,23 @@
     <input type="text" name="word" placeholder="Type a word please." />
   </form>
 
-  <table>
-    <thead>
-      <th>Pun</th>
-      <th>Original Phrase</th>
-    </thead>
+  @if(result.puns.isEmpty) {
+    <p><em>Sorry, no puns for that word</em></p>
+  } else {
+    <table>
+      <thead>
+        <th>Pun</th>
+        <th>Original Phrase</th>
+      </thead>
 
-    <tbody>
-      @for(pun <- result.puns) {
-        <tr>
-          <td>@pun.pun</td>
-          <td>@pun.sourcePhrase</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+      <tbody>
+        @for(pun <- result.puns) {
+          <tr>
+            <td>@pun.pun</td>
+            <td>@pun.sourcePhrase</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
 }
