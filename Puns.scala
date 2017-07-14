@@ -2,6 +2,7 @@ package com.thoughtbot
 
 import play.api.libs.json._
 import scala.io.Source
+import scala.util.{Try}
 
 case class Rhyme(word: String, score: Int)
 case class Pun(pun: String, sourcePhrase: String)
@@ -29,8 +30,14 @@ object Puns {
 
   def getBestRhymes(word: String): List[Rhyme] = {
     val allRhymes = getRhymes(word)
-    val maxScore = allRhymes.map { _.score }.max
-    allRhymes.filter { _.score == maxScore }
+
+    val scores = allRhymes.map { _.score }
+    val maxScore = Try(scores.max).toOption
+
+    maxScore match {
+      case Some(score) => allRhymes.filter { _.score == score }
+      case None => List()
+    }
   }
 
   def loadPhrases(): List[String] = {
@@ -45,9 +52,7 @@ object Puns {
     }
   }
 
-  def main(args: Array[String]) {
-    val seedWord = args.head
-
+  def getPuns(seedWord: String): List[Pun] = {
     val bestRhymes = getBestRhymes(seedWord)
     val rhymeWords = bestRhymes.map { _.word }
 
@@ -61,7 +66,7 @@ object Puns {
       }
     })
 
-    val puns = linesWithOptionMatch.map(lineWithMatch => {
+    linesWithOptionMatch.map(lineWithMatch => {
       lineWithMatch match {
         case (line, Some(matchWord)) => {
           val pun = line.
@@ -72,7 +77,11 @@ object Puns {
         case (line, _) => Pun("failure", "This SHOULD NOT HAPPEN")
       }
     })
+  }
 
+  def main(args: Array[String]) {
+    val seedWord = args.head
+    val puns = getPuns(seedWord)
     puns.foreach(pun => {
       val punPhrase = pun.pun
       val sourcePhrase = pun.sourcePhrase

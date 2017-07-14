@@ -1,5 +1,28 @@
-@()
+@(result: PunResult)
 
 @main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+  <h1>PUN</h1>
+
+  <p>@result.word.getOrElse("_NO WORD ENTERED_")</p>
+
+  <form action="/" method="GET">
+    <label for="word">Word</label>
+    <input type="text" name="word" placeholder="Type a word please." />
+  </form>
+
+  <table>
+    <thead>
+      <th>Pun</th>
+      <th>Original Phrase</th>
+    </thead>
+
+    <tbody>
+      @for(pun <- result.puns) {
+        <tr>
+          <td>@pun.pun</td>
+          <td>@pun.sourcePhrase</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 }
