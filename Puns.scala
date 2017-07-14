@@ -26,6 +26,9 @@ object Puns {
   }
 
   def main(args: Array[String]) {
-    println(getRhymes("beer"))
+    val allRhymes = getRhymes("beer")
+    val maxScore = allRhymes.map { _.score }.max
+    val bestRhymes = allRhymes.filter { _.score == maxScore }
+    println(bestRhymes)
   }
 }
