@@ -25,10 +25,13 @@ object Puns {
     }
   }
 
-  def main(args: Array[String]) {
-    val allRhymes = getRhymes("beer")
+  def getBestRhymes(word: String): List[Rhyme] = {
+    val allRhymes = getRhymes(word)
     val maxScore = allRhymes.map { _.score }.max
-    val bestRhymes = allRhymes.filter { _.score == maxScore }
-    println(bestRhymes)
+    allRhymes.filter { _.score == maxScore }
+  }
+
+  def main(args: Array[String]) {
+    println(getBestRhymes("beer"))
   }
 }
